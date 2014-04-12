@@ -14,7 +14,6 @@ public class JmProperties {
 	public JmProperties() {
 		this.property = new Properties();
 		try {
-			// 한글이 깨지는 문제 때문에 인코딩을 지정해서 읽을수 있도록 함.
 			this.property.load(new BufferedReader(new InputStreamReader(
 					new FileInputStream(".net.property"), "UTF-8")));
 		} catch (FileNotFoundException e) {
@@ -28,4 +27,11 @@ public class JmProperties {
 		return property.getProperty(key);
 	}
 
+	/*
+	public static void main(String args[]) {
+		JmProperties property = new JmProperties();
+		System.out.println(property.get("name"));
+ 
+	}
+	*/
 }
