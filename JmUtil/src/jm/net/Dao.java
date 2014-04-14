@@ -40,7 +40,7 @@ public class Dao {
 			rs = pstmt.executeQuery();
 
 			if (rs.next()) {
-				res = rs.getInt(0);
+				res = rs.getInt(1);
 			}
 		} catch(Exception e){
 			e.printStackTrace();
@@ -79,7 +79,7 @@ public class Dao {
 			rs = pstmt.executeQuery();
 
 			if (rs.next()) {
-				res = rs.getLong(0);
+				res = rs.getLong(1);
 			}
 		} catch(Exception e){
 			e.printStackTrace();
