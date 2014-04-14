@@ -142,12 +142,13 @@ public class Dao {
 	}
 	
 	/**
-	 * 테이블명, 데이터셋으로 해당 데이터를 입력받는 메서드.
-	 * @param tableName
-	 * @param dataEntity
+	 * 테이블명, 데이터셋으로 해당 데이터를 추가하는 메서드.
+	 * @param tableName : 테이블명
+	 * @param dataEntity : 업데이트 할 데이터셋.
 	 * @return
+	 * @throws Exception 
 	 */
-	public int inertDb(String tableName, DataEntity dataEntity){
+	public int inertData(String tableName, DataEntity dataEntity) throws Exception{
 		int result = 0;
 		
 		Trx trx = Trx.getInstance();
@@ -160,18 +161,20 @@ public class Dao {
 		String[] colums = dataEntity.keySet().toArray(new String[0]);
 		int columSize = colums.length;
 		
+		StringBuffer values = new StringBuffer();
+		
 		try {
 //			conn = trx.getLocalConn();
 			conn = trx.getRemoteConn();
 			
-			sql.append("INSERT INTO ");
+			sql.append("INSERT INTO \n");
 			sql.append(tableName + " ");
 			sql.append(" ( ");
 			for(int col=0; col < columSize; col++){
 				sql.append(colums[col]);
 				if(col < columSize-1){ sql.append(", "); }
 			}
-			sql.append(" ) ");
+			sql.append(") \n");
 			
 			sql.append("VALUES ( ");
 			for(int val=0; val < columSize; val++){
@@ -182,18 +185,25 @@ public class Dao {
 			
 			pstmt = conn.prepareStatement(sql.toString());
 			
-			for(int stm=1; stm <= columSize; stm++){
-				pstmt.setString(stm, dataEntity.get(colums[stm]));
+			for(int stm=0; stm < columSize; stm++){
+				pstmt.setString((stm+1), dataEntity.get(colums[stm]));
+				
+				//오류 출력을 위한 value 저장
+				values.append(dataEntity.get(colums[stm]));
+				if(stm < columSize-1){ values.append(", "); }
 			}
 			
 			result = pstmt.executeUpdate();
 
 		} catch (SQLException sqe) {
 			sqe.printStackTrace();
-			System.out.println(sqe.toString());
+			System.out.println("SQL : " + sql.toString());
+			System.out.println("Values : " + values.toString());
+			
+			throw sqe;
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println(e.toString());
+			throw e;
 		} finally {
 			try {
 				if (rs != null)
@@ -203,7 +213,158 @@ public class Dao {
 				if (trx != null)
 					trx.close();
 			} catch (SQLException se) {
-				System.out.println(se.toString());
+				se.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * 테이블 업데이트를 위한 공통 메서드
+	 * @param tableName : 업데이트 할 테이블명
+	 * @param setEntity : 변경 할 데이터 정보 엔티티
+	 * @param whereEntity : 업데이트 할 대상 검색 조건 엔티티.
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateData(String tableName, DataEntity setEntity, DataEntity whereEntity) throws Exception{
+		int result = 0;
+		
+		Trx trx = Trx.getInstance();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		StringBuffer sql = new StringBuffer();
+		
+		String[] setColums = setEntity.keySet().toArray(new String[0]);
+		int setColumSize = setColums.length;
+		
+		String[] whereColums = whereEntity.keySet().toArray(new String[0]);
+		int whereColumSize = whereColums.length;
+		
+		StringBuffer values = new StringBuffer();
+		
+		try {
+//			conn = trx.getLocalConn();
+			conn = trx.getRemoteConn();
+			
+			sql.append("UPDATE "+ tableName + " SET \n");
+			
+			for(int col=0; col < setColumSize; col++){
+				sql.append(setColums[col]+"=? ");
+				if(col < setColumSize-1){ sql.append(", \n"); }
+			}
+			
+			sql.append("\nWHERE \n");
+			
+			for(int val=0; val < whereColumSize; val++){
+				sql.append(whereColums[val]+"=?");
+				if(val < whereColumSize-1){ sql.append("AND \n"); }
+			}
+			
+			pstmt = conn.prepareStatement(sql.toString());
+			
+			int totalSize = 1;
+			for(int stm=0; stm < setColumSize; stm++){
+				pstmt.setString((totalSize), setEntity.get(setColums[stm]));
+				//오류 출력을 위한 value 저장
+				values.append(setEntity.get(setColums[stm]));
+				if(stm < setColumSize-1){ values.append(", "); } else { values.append("\n"); }
+				totalSize++;
+			}
+			
+			for(int stm=0; stm < whereColumSize; stm++){
+				pstmt.setString((totalSize), whereEntity.get(whereColums[stm]));
+				//오류 출력을 위한 value 저장
+				values.append(whereEntity.get(whereColums[stm]));
+				if(stm < whereColumSize-1){ values.append(", "); }
+				totalSize++;
+			}
+			
+			result = pstmt.executeUpdate();
+
+		} catch (SQLException sqe) {
+			sqe.printStackTrace();
+			System.out.println("SQL : " + sql.toString());
+			System.out.println("Values : " + values.toString());
+			
+			throw sqe;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (trx != null)
+					trx.close();
+			} catch (SQLException se) {
+				se.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	
+	public int deleteData(String tableName, DataEntity whereEntity) throws Exception{
+		int result = 0;
+		
+		Trx trx = Trx.getInstance();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		StringBuffer sql = new StringBuffer();
+		
+		String[] whereColums = whereEntity.keySet().toArray(new String[0]);
+		int whereColumSize = whereColums.length;
+		
+		StringBuffer values = new StringBuffer();
+		
+		try {
+//			conn = trx.getLocalConn();
+			conn = trx.getRemoteConn();
+			
+			sql.append("DELETE FROM "+ tableName + " WHERE \n");
+			
+			for(int val=0; val < whereColumSize; val++){
+				sql.append(whereColums[val]+"=?");
+				if(val < whereColumSize-1){ sql.append("AND \n"); }
+			}
+			
+			pstmt = conn.prepareStatement(sql.toString());
+			
+			for(int stm=0; stm < whereColumSize; stm++){
+				pstmt.setString((stm+1), whereEntity.get(whereColums[stm]));
+				//오류 출력을 위한 value 저장
+				values.append(whereEntity.get(whereColums[stm]));
+				if(stm < whereColumSize-1){ values.append(", "); }
+			}
+			
+			result = pstmt.executeUpdate();
+
+		} catch (SQLException sqe) {
+			sqe.printStackTrace();
+			System.out.println("SQL : " + sql.toString());
+			System.out.println("Values : " + values.toString());
+			
+			throw sqe;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (trx != null)
+					trx.close();
+			} catch (SQLException se) {
+				se.printStackTrace();
 			}
 		}
 		return result;
