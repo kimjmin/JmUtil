@@ -96,9 +96,15 @@ public class Dao {
 		return res;
 	}
 	
-	
-	public DbEntity[] getResult( Connection conn, String sql, String[] params ){
-		DbEntity[] res = null;
+	/**
+	 * 쿼리 결과를 DataEntity 의 배열로 반환하는 메서드.
+	 * @param conn
+	 * @param sql
+	 * @param params
+	 * @return
+	 */
+	public DataEntity[] getResult( Connection conn, String sql, String[] params ){
+		DataEntity[] res = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		ResultSetMetaData meta = null;
@@ -111,11 +117,11 @@ public class Dao {
 			}
 			rs = pstmt.executeQuery();
 			meta = rs.getMetaData();
-			res = new DbEntity[meta.getColumnCount()];
+			res = new DataEntity[meta.getColumnCount()];
 			int v = 0;
 			if (rs.next()) {
 				for(int j=0; j < meta.getColumnCount(); j++){
-					res[v] = new DbEntity();
+					res[v] = new DataEntity();
 					res[v].put(meta.getCatalogName(j), rs.getString(j));
 				}
 			}
@@ -135,5 +141,72 @@ public class Dao {
 		return res;
 	}
 	
+	/**
+	 * 테이블명, 데이터셋으로 해당 데이터를 입력받는 메서드.
+	 * @param tableName
+	 * @param dataEntity
+	 * @return
+	 */
+	public int inertDb(String tableName, DataEntity dataEntity){
+		int result = 0;
+		
+		Trx trx = Trx.getInstance();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		StringBuffer sql = new StringBuffer();
+		
+		String[] colums = dataEntity.keySet().toArray(new String[0]);
+		int columSize = colums.length;
+		
+		try {
+//			conn = trx.getLocalConn();
+			conn = trx.getRemoteConn();
+			
+			sql.append("INSERT INTO ");
+			sql.append(tableName + " ");
+			sql.append(" ( ");
+			for(int col=0; col < columSize; col++){
+				sql.append(colums[col]);
+				if(col < columSize-1){ sql.append(", "); }
+			}
+			sql.append(" ) ");
+			
+			sql.append("VALUES ( ");
+			for(int val=0; val < columSize; val++){
+				sql.append("?");
+				if(val < columSize-1){ sql.append(", "); }
+			}
+			sql.append(" ) ");
+			
+			pstmt = conn.prepareStatement(sql.toString());
+			
+			for(int stm=1; stm <= columSize; stm++){
+				pstmt.setString(stm, dataEntity.get(colums[stm]));
+			}
+			
+			result = pstmt.executeUpdate();
+
+		} catch (SQLException sqe) {
+			sqe.printStackTrace();
+			System.out.println(sqe.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e.toString());
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (trx != null)
+					trx.close();
+			} catch (SQLException se) {
+				System.out.println(se.toString());
+			}
+		}
+		return result;
+	}
 	
 }
