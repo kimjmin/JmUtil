@@ -28,8 +28,7 @@
 	</target>
 	
 	<target name="mkjar" depends="compile">
-		<mkdir dir="${dist.dir}"/>
-		<jar destfile="${dist.dir}/${jar.file}" basedir="${build.dir}">
+		<jar destfile="${base.dir}/lib/${jar.file}" basedir="${build.dir}">
 		</jar>
 	</target>
 	
