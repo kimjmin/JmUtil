@@ -23,15 +23,19 @@ public class JmProperties {
 		}
 	}
 
+	public JmProperties(String propertyFile){
+		this.property = new Properties();
+		try {
+			this.property.load(new BufferedReader(new InputStreamReader(new FileInputStream(propertyFile), "UTF-8")));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public String get(String key) {
 		return property.getProperty(key);
 	}
-
-	/*
-	public static void main(String args[]) {
-		JmProperties property = new JmProperties();
-		System.out.println(property.get("name"));
- 
-	}
-	*/
+	
 }
