@@ -15,7 +15,7 @@ public class JmProperties {
 		this.property = new Properties();
 		try {
 			this.property.load(new BufferedReader(new InputStreamReader(
-					new FileInputStream("jm.property"), "UTF-8")));
+					new FileInputStream("/lib/jm.property"), "UTF-8")));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
