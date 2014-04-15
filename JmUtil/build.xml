@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="euc-kr"?>
+<project name="JmUtil" default="dist">
+	<property file="build.properties" />
+	
+	<target name="prepare">
+		<tstamp>
+			<format property="DSTAMP" pattern="yyyy/MM/dd"/>
+			<format property="TSTAMP" pattern="HH:mm:ss"/>
+		</tstamp>
+		<echo message="Build Start : ${DSTAMP} ${TSTAMP}" />
+	</target>
+	
+	<target name="clean" depends="prepare">
+		<delete dir="${dist.dir}"></delete>
+		<delete dir="${build.dir}"></delete>
+	</target>
+	
+	<target name="compile" depends="clean">
+		<mkdir dir="${build.dir}"/>
+		<javac deprecation="off" srcdir="${src.dir}" destdir="${build.dir}" listfiles="no" failonerror="true">
+			<classpath>
+				<pathelement path="${base.dir}/lib"/>
+				<fileset dir="${base.dir}/lib">
+					<include name="*.jar"/>
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+	
+	<target name="mkjar" depends="compile">
+		<mkdir dir="${dist.dir}"/>
+		<jar destfile="${dist.dir}/${jar.file}" basedir="${build.dir}">
+		</jar>
+	</target>
+	
+	<target name="dist" depends="mkjar">
+		
+	</target>
+	
+	<target name="run">
+	</target>
+	
+</project>
