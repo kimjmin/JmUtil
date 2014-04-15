@@ -142,17 +142,72 @@ public class Dao {
 	}
 	
 	/**
+	 * 원격 DB에 저장.
+	 * @param tableName
+	 * @param dataEntity
+	 * @return
+	 */
+	public int inertRemoteData(String tableName, DataEntity dataEntity){
+		int result = 0;
+		Trx trx = Trx.getInstance();
+		Connection conn;
+		try {
+			conn = trx.getRemoteConn();
+			result = inertData(conn, tableName, dataEntity);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (trx != null)
+					trx.close();
+			} catch (SQLException e) {
+					e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * 로컬 DB에 저장.
+	 * @param tableName
+	 * @param dataEntity
+	 * @return
+	 */
+	public int inertLocalData(String tableName, DataEntity dataEntity){
+		int result = 0;
+		Trx trx = Trx.getInstance();
+		Connection conn;
+		try {
+			conn = trx.getLocalConn();
+			result = inertData(conn, tableName, dataEntity);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (trx != null)
+					trx.close();
+			} catch (SQLException e) {
+					e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * 테이블 저장을 위한 공통 메서드
 	 * 테이블명, 데이터셋으로 해당 데이터를 추가하는 메서드.
 	 * @param tableName : 테이블명
 	 * @param dataEntity : 업데이트 할 데이터셋.
 	 * @return
 	 * @throws Exception 
 	 */
-	public int inertData(String tableName, DataEntity dataEntity) throws Exception{
+	public int inertData(Connection conn, String tableName, DataEntity dataEntity){
 		int result = 0;
 		
-		Trx trx = Trx.getInstance();
-		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 
@@ -164,8 +219,6 @@ public class Dao {
 		StringBuffer values = new StringBuffer();
 		
 		try {
-//			conn = trx.getLocalConn();
-			conn = trx.getRemoteConn();
 			
 			sql.append("INSERT INTO \n");
 			sql.append(tableName + " ");
@@ -199,25 +252,78 @@ public class Dao {
 			sqe.printStackTrace();
 			System.out.println("SQL : " + sql.toString());
 			System.out.println("Values : " + values.toString());
-			
-			throw sqe;
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw e;
 		} finally {
 			try {
 				if (rs != null)
 					rs.close();
 				if (pstmt != null)
 					pstmt.close();
-				if (trx != null)
-					trx.close();
 			} catch (SQLException se) {
 				se.printStackTrace();
 			}
 		}
 		return result;
 	}
+	
+	
+	/**
+	 * 원격 DB 업데이트.
+	 * @param tableName
+	 * @param dataEntity
+	 * @return
+	 */
+	public int updateRemoteData(String tableName, DataEntity dataEntity, DataEntity whereEntity){
+		int result = 0;
+		Trx trx = Trx.getInstance();
+		Connection conn;
+		try {
+			conn = trx.getRemoteConn();
+			result = updateData(conn, tableName, dataEntity, whereEntity);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (trx != null)
+					trx.close();
+			} catch (SQLException e) {
+					e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * 로컬 DB 업데이트.
+	 * @param tableName
+	 * @param dataEntity
+	 * @return
+	 */
+	public int updateLocalData(String tableName, DataEntity dataEntity, DataEntity whereEntity){
+		int result = 0;
+		Trx trx = Trx.getInstance();
+		Connection conn;
+		try {
+			conn = trx.getLocalConn();
+			result = updateData(conn, tableName, dataEntity, whereEntity);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (trx != null)
+					trx.close();
+			} catch (SQLException e) {
+					e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
 	
 	/**
 	 * 테이블 업데이트를 위한 공통 메서드
@@ -227,11 +333,9 @@ public class Dao {
 	 * @return
 	 * @throws Exception
 	 */
-	public int updateData(String tableName, DataEntity setEntity, DataEntity whereEntity) throws Exception{
+	public int updateData(Connection conn, String tableName, DataEntity setEntity, DataEntity whereEntity){
 		int result = 0;
 		
-		Trx trx = Trx.getInstance();
-		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 
@@ -246,8 +350,6 @@ public class Dao {
 		StringBuffer values = new StringBuffer();
 		
 		try {
-//			conn = trx.getLocalConn();
-			conn = trx.getRemoteConn();
 			
 			sql.append("UPDATE "+ tableName + " SET \n");
 			
@@ -288,19 +390,14 @@ public class Dao {
 			sqe.printStackTrace();
 			System.out.println("SQL : " + sql.toString());
 			System.out.println("Values : " + values.toString());
-			
-			throw sqe;
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw e;
 		} finally {
 			try {
 				if (rs != null)
 					rs.close();
 				if (pstmt != null)
 					pstmt.close();
-				if (trx != null)
-					trx.close();
 			} catch (SQLException se) {
 				se.printStackTrace();
 			}
@@ -309,11 +406,71 @@ public class Dao {
 	}
 	
 	
-	public int deleteData(String tableName, DataEntity whereEntity) throws Exception{
+	/**
+	 * 원격 DB 삭제.
+	 * @param tableName
+	 * @param dataEntity
+	 * @return
+	 */
+	public int deleteRemoteData(String tableName, DataEntity whereEntity){
+		int result = 0;
+		Trx trx = Trx.getInstance();
+		Connection conn;
+		try {
+			conn = trx.getRemoteConn();
+			result = deleteData(conn, tableName, whereEntity);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (trx != null)
+					trx.close();
+			} catch (SQLException e) {
+					e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * 로컬 DB 삭제.
+	 * @param tableName
+	 * @param dataEntity
+	 * @return
+	 */
+	public int deleteLocalData(String tableName, DataEntity whereEntity){
+		int result = 0;
+		Trx trx = Trx.getInstance();
+		Connection conn;
+		try {
+			conn = trx.getLocalConn();
+			result = deleteData(conn, tableName, whereEntity);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (trx != null)
+					trx.close();
+			} catch (SQLException e) {
+					e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * 테이블 삭제를 위한 공통 메서드
+	 * @param tableName : 삭제할 테이블 명
+	 * @param whereEntity : 삭제할 테이블의 where 조건이 있는 엔티티.
+	 * @return
+	 */
+	public int deleteData(Connection conn, String tableName, DataEntity whereEntity) {
 		int result = 0;
 		
-		Trx trx = Trx.getInstance();
-		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 
@@ -325,8 +482,6 @@ public class Dao {
 		StringBuffer values = new StringBuffer();
 		
 		try {
-//			conn = trx.getLocalConn();
-			conn = trx.getRemoteConn();
 			
 			sql.append("DELETE FROM "+ tableName + " WHERE \n");
 			
@@ -350,19 +505,14 @@ public class Dao {
 			sqe.printStackTrace();
 			System.out.println("SQL : " + sql.toString());
 			System.out.println("Values : " + values.toString());
-			
-			throw sqe;
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw e;
 		} finally {
 			try {
 				if (rs != null)
 					rs.close();
 				if (pstmt != null)
 					pstmt.close();
-				if (trx != null)
-					trx.close();
 			} catch (SQLException se) {
 				se.printStackTrace();
 			}
