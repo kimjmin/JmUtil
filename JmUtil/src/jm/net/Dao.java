@@ -96,6 +96,63 @@ public class Dao {
 		return res;
 	}
 	
+	
+	/**
+	 * 원격 DB의 쿼리 결과를 DataEntity 의 배열로 반환하는 메서드.
+	 * @param sql
+	 * @param params
+	 * @return
+	 */
+	public DataEntity[] getRemoteResult(String sql, String[] params){
+		DataEntity[] result = null;
+		Trx trx = Trx.getInstance();
+		Connection conn;
+		try {
+			conn = trx.getRemoteConn();
+			result = getResult(conn, sql, params);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (trx != null)
+					trx.close();
+			} catch (SQLException e) {
+					e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * 원격 DB의 쿼리 결과를 DataEntity 의 배열로 반환하는 메서드.
+	 * @param sql
+	 * @param params
+	 * @return
+	 */
+	public DataEntity[] getLocalResult(String sql, String[] params){
+		DataEntity[] result = null;
+		Trx trx = Trx.getInstance();
+		Connection conn;
+		try {
+			conn = trx.getLocalConn();
+			result = getResult(conn, sql, params);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (trx != null)
+					trx.close();
+			} catch (SQLException e) {
+					e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
 	/**
 	 * 쿼리 결과를 DataEntity 의 배열로 반환하는 메서드.
 	 * @param conn
