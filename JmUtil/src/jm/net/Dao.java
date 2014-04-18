@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.ResultSetMetaData;
+import java.util.Vector;
 
 public class Dao {
 	public static Dao instance = null;
@@ -16,6 +17,62 @@ public class Dao {
 			instance = new Dao();
 		}
 		return instance;
+	}
+	
+	/**
+	 * 원격 DB의 count(*) 쿼리 결과를 int 로 반환하는 메서드.
+	 * @param sql
+	 * @param params
+	 * @return
+	 */
+	public int getRemoteCount(String sql, String[] params){
+		int result = 0;
+		Trx trx = Trx.getInstance();
+		Connection conn;
+		try {
+			conn = trx.getRemoteConn();
+			result = getCount(conn, sql, params);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (trx != null)
+					trx.close();
+			} catch (SQLException e) {
+					e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * 로컬 DB의 count(*) 쿼리 결과를 int 로 반환하는 메서드.
+	 * @param sql
+	 * @param params
+	 * @return
+	 */
+	public int getLocalCount(String sql, String[] params){
+		int result = 0;
+		Trx trx = Trx.getInstance();
+		Connection conn;
+		try {
+			conn = trx.getLocalConn();
+			result = getCount(conn, sql, params);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (trx != null)
+					trx.close();
+			} catch (SQLException e) {
+					e.printStackTrace();
+			}
+		}
+		return result;
 	}
 	
 	/**
@@ -55,6 +112,64 @@ public class Dao {
 			}
 		}
 		return res;
+	}
+	
+	
+
+	/**
+	 * 원격 DB의 count(*) 쿼리 결과를 int 로 반환하는 메서드.
+	 * @param sql
+	 * @param params
+	 * @return
+	 */
+	public long getRemoteLongCount(String sql, String[] params){
+		long result = 0;
+		Trx trx = Trx.getInstance();
+		Connection conn;
+		try {
+			conn = trx.getRemoteConn();
+			result = getLongCount(conn, sql, params);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (trx != null)
+					trx.close();
+			} catch (SQLException e) {
+					e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * 로컬 DB의 count(*) 쿼리 결과를 int 로 반환하는 메서드.
+	 * @param sql
+	 * @param params
+	 * @return
+	 */
+	public long getLocalLongCount(String sql, String[] params){
+		long result = 0;
+		Trx trx = Trx.getInstance();
+		Connection conn;
+		try {
+			conn = trx.getLocalConn();
+			result = getLongCount(conn, sql, params);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (trx != null)
+					trx.close();
+			} catch (SQLException e) {
+					e.printStackTrace();
+			}
+		}
+		return result;
 	}
 	
 	/**
@@ -122,6 +237,7 @@ public class Dao {
 					e.printStackTrace();
 			}
 		}
+		
 		return result;
 	}
 	
@@ -165,6 +281,8 @@ public class Dao {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		ResultSetMetaData meta = null;
+		Vector<DataEntity> vec = new Vector<DataEntity>();
+		
 		try {
 			pstmt = conn.prepareStatement(sql);
 			if(params != null){
@@ -174,14 +292,18 @@ public class Dao {
 			}
 			rs = pstmt.executeQuery();
 			meta = rs.getMetaData();
-			res = new DataEntity[meta.getColumnCount()];
-			int v = 0;
-			if (rs.next()) {
-				for(int j=0; j < meta.getColumnCount(); j++){
-					res[v] = new DataEntity();
-					res[v].put(meta.getCatalogName(j), rs.getString(j));
+			
+			while (rs.next()) {
+				DataEntity tempDataEntity = new DataEntity();
+				for(int j=1; j <= meta.getColumnCount(); j++){
+					tempDataEntity.put(meta.getColumnName(j), rs.getString(j));
 				}
+				vec.add(tempDataEntity);
 			}
+			
+			res = new DataEntity[vec.size()];
+			vec.copyInto(res);
+			
 		} catch(Exception e){
 			e.printStackTrace();
 		} finally {
