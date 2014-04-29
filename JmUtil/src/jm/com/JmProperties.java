@@ -22,7 +22,7 @@ public class JmProperties {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public JmProperties(String propertyFile){
 		this.property = new Properties();
 		try {
@@ -35,7 +35,7 @@ public class JmProperties {
 	}
 	
 	public String get(String key) {
-		return property.getProperty(key);
+		return this.property.getProperty(key);
 	}
 	
 }
