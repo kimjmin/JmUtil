@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.sql.ResultSetMetaData;
 import java.util.Vector;
 
+import jm.com.JmProperties;
+
 public class Dao {
 	public static Dao instance = null;
 	
@@ -76,6 +78,36 @@ public class Dao {
 	}
 	
 	/**
+	 * DB의 count(*) 쿼리 결과를 int 로 반환하는 메서드.
+	 * JmProperty 를 입력받아 컨넥션을 생성
+	 * @param property
+	 * @param sql
+	 * @param params
+	 * @return
+	 */
+	public int getCount(JmProperties property, String sql, String[] params){
+		int result = 0;
+		Trx trx = Trx.getInstance();
+		Connection conn;
+		try {
+			conn = trx.getConn(property);
+			result = getCount(conn, sql, params);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (trx != null)
+					trx.close();
+			} catch (SQLException e) {
+					e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	/**
 	 * count(*) 쿼리 결과를 int 로 반환하는 메서드.
 	 * @param conn
 	 * @param sql
@@ -114,10 +146,8 @@ public class Dao {
 		return res;
 	}
 	
-	
-
 	/**
-	 * 원격 DB의 count(*) 쿼리 결과를 int 로 반환하는 메서드.
+	 * 원격 DB의 count(*) 쿼리 결과를 Long 숫자값으로  반환하는 메서드.
 	 * @param sql
 	 * @param params
 	 * @return
@@ -156,6 +186,36 @@ public class Dao {
 		Connection conn;
 		try {
 			conn = trx.getLocalConn();
+			result = getLongCount(conn, sql, params);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (trx != null)
+					trx.close();
+			} catch (SQLException e) {
+					e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * DB의 count(*) 쿼리 결과를 long 로 반환하는 메서드.
+	 * JmProperty 를 입력받아 컨넥션을 생성
+	 * @param property
+	 * @param sql
+	 * @param params
+	 * @return
+	 */
+	public long getLongCount(JmProperties property, String sql, String[] params){
+		long result = 0;
+		Trx trx = Trx.getInstance();
+		Connection conn;
+		try {
+			conn = trx.getConn(property);
 			result = getLongCount(conn, sql, params);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -270,6 +330,36 @@ public class Dao {
 	}
 	
 	/**
+	 * DB의 쿼리 결과를 DataEntity 의 배열로 반환하는 메서드.
+	 * JmProperty 를 입력받아 컨넥션을 생성
+	 * @param property
+	 * @param sql
+	 * @param params
+	 * @return
+	 */
+	public DataEntity[] getResult(JmProperties property, String sql, String[] params){
+		DataEntity[] result = null;
+		Trx trx = Trx.getInstance();
+		Connection conn;
+		try {
+			conn = trx.getConn(property);
+			result = getResult(conn, sql, params);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (trx != null)
+					trx.close();
+			} catch (SQLException e) {
+					e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	/**
 	 * 쿼리 결과를 DataEntity 의 배열로 반환하는 메서드.
 	 * @param conn
 	 * @param sql
@@ -360,6 +450,36 @@ public class Dao {
 		Connection conn;
 		try {
 			conn = trx.getLocalConn();
+			result = inertData(conn, tableName, dataEntity);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (trx != null)
+					trx.close();
+			} catch (SQLException e) {
+					e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * DB에 저장.
+	 * JmProperty 를 입력받아 컨넥션을 생성
+	 * @param property
+	 * @param tableName
+	 * @param dataEntity
+	 * @return
+	 */
+	public int inertData(JmProperties property, String tableName, DataEntity dataEntity){
+		int result = 0;
+		Trx trx = Trx.getInstance();
+		Connection conn;
+		try {
+			conn = trx.getConn(property);
 			result = inertData(conn, tableName, dataEntity);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -503,6 +623,36 @@ public class Dao {
 		return result;
 	}
 	
+	/**
+	 * DB 업데이트.
+	 * JmProperty 를 입력받아 컨넥션을 생성
+	 * @param property
+	 * @param tableName
+	 * @param dataEntity
+	 * @param whereEntity
+	 * @return
+	 */
+	public int updateData(JmProperties property, String tableName, DataEntity dataEntity, DataEntity whereEntity){
+		int result = 0;
+		Trx trx = Trx.getInstance();
+		Connection conn;
+		try {
+			conn = trx.getConn(property);
+			result = updateData(conn, tableName, dataEntity, whereEntity);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (trx != null)
+					trx.close();
+			} catch (SQLException e) {
+					e.printStackTrace();
+			}
+		}
+		return result;
+	}
 	
 	/**
 	 * 테이블 업데이트를 위한 공통 메서드
@@ -625,6 +775,36 @@ public class Dao {
 		Connection conn;
 		try {
 			conn = trx.getLocalConn();
+			result = deleteData(conn, tableName, whereEntity);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (trx != null)
+					trx.close();
+			} catch (SQLException e) {
+					e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * DB 삭제.
+	 * JmProperty 를 입력받아 컨넥션을 생성
+	 * @param property
+	 * @param tableName
+	 * @param whereEntity
+	 * @return
+	 */
+	public int deleteData(JmProperties property, String tableName, DataEntity whereEntity){
+		int result = 0;
+		Trx trx = Trx.getInstance();
+		Connection conn;
+		try {
+			conn = trx.getConn(property);
 			result = deleteData(conn, tableName, whereEntity);
 		} catch (SQLException e) {
 			e.printStackTrace();
