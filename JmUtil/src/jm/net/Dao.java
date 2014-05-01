@@ -690,7 +690,7 @@ public class Dao {
 			sql.append("\nWHERE \n");
 			
 			for(int val=0; val < whereColumSize; val++){
-				sql.append(whereColums[val]+"=?");
+				sql.append(whereColums[val]+"=? ");
 				if(val < whereColumSize-1){ sql.append("AND \n"); }
 			}
 			
@@ -845,7 +845,7 @@ public class Dao {
 			sql.append("DELETE FROM "+ tableName + " WHERE \n");
 			
 			for(int val=0; val < whereColumSize; val++){
-				sql.append(whereColums[val]+"=?");
+				sql.append(whereColums[val]+"=? ");
 				if(val < whereColumSize-1){ sql.append("AND \n"); }
 			}
 			
