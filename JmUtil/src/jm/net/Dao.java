@@ -734,6 +734,50 @@ public class Dao {
 		return result;
 	}
 	
+	/**
+	 * sql 문 받아 update 수행하는 메서드.
+	 * @param property
+	 * @param sql
+	 * @param params
+	 * @return
+	 */
+	public int updateSql(JmProperties property, String sql, String[] params){
+		int result = 0;
+		Trx trx = Trx.getInstance();
+		Connection conn;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		StringBuffer values = new StringBuffer();
+		try {
+			conn = trx.getConn(property);
+			pstmt = conn.prepareStatement(sql);
+			int i = 1;
+			for(String param : params){
+				pstmt.setString(i, param);
+				values.append(param+", ");
+				i++;
+			}
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException sqe) {
+			sqe.printStackTrace();
+			System.out.println("SQL : " + sql.toString());
+			System.out.println("Values : " + values.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+			} catch (SQLException se) {
+				se.printStackTrace();
+			}
+		}
+		return result;
+	}
 	
 	/**
 	 * 원격 DB 삭제.
