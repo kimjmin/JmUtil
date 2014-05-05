@@ -772,6 +772,8 @@ public class Dao {
 					rs.close();
 				if (pstmt != null)
 					pstmt.close();
+				if (trx != null)
+					trx.close();
 			} catch (SQLException se) {
 				se.printStackTrace();
 			}
