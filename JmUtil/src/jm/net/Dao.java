@@ -22,62 +22,6 @@ public class Dao {
 	}
 	
 	/**
-	 * 원격 DB의 count(*) 쿼리 결과를 int 로 반환하는 메서드.
-	 * @param sql
-	 * @param params
-	 * @return
-	 */
-	public int getRemoteCount(String sql, String[] params){
-		int result = 0;
-		Trx trx = Trx.getInstance();
-		Connection conn;
-		try {
-			conn = trx.getRemoteConn();
-			result = getCount(conn, sql, params);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (trx != null)
-					trx.close();
-			} catch (SQLException e) {
-					e.printStackTrace();
-			}
-		}
-		return result;
-	}
-	
-	/**
-	 * 로컬 DB의 count(*) 쿼리 결과를 int 로 반환하는 메서드.
-	 * @param sql
-	 * @param params
-	 * @return
-	 */
-	public int getLocalCount(String sql, String[] params){
-		int result = 0;
-		Trx trx = Trx.getInstance();
-		Connection conn;
-		try {
-			conn = trx.getLocalConn();
-			result = getCount(conn, sql, params);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (trx != null)
-					trx.close();
-			} catch (SQLException e) {
-					e.printStackTrace();
-			}
-		}
-		return result;
-	}
-	
-	/**
 	 * DB의 count(*) 쿼리 결과를 int 로 반환하는 메서드.
 	 * JmProperty 를 입력받아 컨넥션을 생성
 	 * @param property
@@ -87,7 +31,7 @@ public class Dao {
 	 */
 	public int getCount(JmProperties property, String sql, String[] params){
 		int result = 0;
-		Trx trx = Trx.getInstance();
+		Trx trx = new Trx();
 		Connection conn;
 		try {
 			conn = trx.getConn(property);
@@ -147,62 +91,6 @@ public class Dao {
 	}
 	
 	/**
-	 * 원격 DB의 count(*) 쿼리 결과를 Long 숫자값으로  반환하는 메서드.
-	 * @param sql
-	 * @param params
-	 * @return
-	 */
-	public long getRemoteLongCount(String sql, String[] params){
-		long result = 0;
-		Trx trx = Trx.getInstance();
-		Connection conn;
-		try {
-			conn = trx.getRemoteConn();
-			result = getLongCount(conn, sql, params);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (trx != null)
-					trx.close();
-			} catch (SQLException e) {
-					e.printStackTrace();
-			}
-		}
-		return result;
-	}
-	
-	/**
-	 * 로컬 DB의 count(*) 쿼리 결과를 int 로 반환하는 메서드.
-	 * @param sql
-	 * @param params
-	 * @return
-	 */
-	public long getLocalLongCount(String sql, String[] params){
-		long result = 0;
-		Trx trx = Trx.getInstance();
-		Connection conn;
-		try {
-			conn = trx.getLocalConn();
-			result = getLongCount(conn, sql, params);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (trx != null)
-					trx.close();
-			} catch (SQLException e) {
-					e.printStackTrace();
-			}
-		}
-		return result;
-	}
-	
-	/**
 	 * DB의 count(*) 쿼리 결과를 long 로 반환하는 메서드.
 	 * JmProperty 를 입력받아 컨넥션을 생성
 	 * @param property
@@ -212,7 +100,7 @@ public class Dao {
 	 */
 	public long getLongCount(JmProperties property, String sql, String[] params){
 		long result = 0;
-		Trx trx = Trx.getInstance();
+		Trx trx = new Trx();
 		Connection conn;
 		try {
 			conn = trx.getConn(property);
@@ -271,64 +159,6 @@ public class Dao {
 		return res;
 	}
 	
-	
-	/**
-	 * 원격 DB의 쿼리 결과를 DataEntity 의 배열로 반환하는 메서드.
-	 * @param sql
-	 * @param params
-	 * @return
-	 */
-	public DataEntity[] getRemoteResult(String sql, String[] params){
-		DataEntity[] result = null;
-		Trx trx = Trx.getInstance();
-		Connection conn;
-		try {
-			conn = trx.getRemoteConn();
-			result = getResult(conn, sql, params);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (trx != null)
-					trx.close();
-			} catch (SQLException e) {
-					e.printStackTrace();
-			}
-		}
-		
-		return result;
-	}
-	
-	/**
-	 * 원격 DB의 쿼리 결과를 DataEntity 의 배열로 반환하는 메서드.
-	 * @param sql
-	 * @param params
-	 * @return
-	 */
-	public DataEntity[] getLocalResult(String sql, String[] params){
-		DataEntity[] result = null;
-		Trx trx = Trx.getInstance();
-		Connection conn;
-		try {
-			conn = trx.getLocalConn();
-			result = getResult(conn, sql, params);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (trx != null)
-					trx.close();
-			} catch (SQLException e) {
-					e.printStackTrace();
-			}
-		}
-		return result;
-	}
-	
 	/**
 	 * DB의 쿼리 결과를 DataEntity 의 배열로 반환하는 메서드.
 	 * JmProperty 를 입력받아 컨넥션을 생성
@@ -339,7 +169,7 @@ public class Dao {
 	 */
 	public DataEntity[] getResult(JmProperties property, String sql, String[] params){
 		DataEntity[] result = null;
-		Trx trx = Trx.getInstance();
+		Trx trx = new Trx();
 		Connection conn;
 		try {
 			conn = trx.getConn(property);
@@ -353,7 +183,7 @@ public class Dao {
 				if (trx != null)
 					trx.close();
 			} catch (SQLException e) {
-					e.printStackTrace();
+				e.printStackTrace();
 			}
 		}
 		return result;
@@ -411,62 +241,6 @@ public class Dao {
 	}
 	
 	/**
-	 * 원격 DB에 저장.
-	 * @param tableName
-	 * @param dataEntity
-	 * @return
-	 */
-	public int inertRemoteData(String tableName, DataEntity dataEntity){
-		int result = 0;
-		Trx trx = Trx.getInstance();
-		Connection conn;
-		try {
-			conn = trx.getRemoteConn();
-			result = inertData(conn, tableName, dataEntity);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (trx != null)
-					trx.close();
-			} catch (SQLException e) {
-					e.printStackTrace();
-			}
-		}
-		return result;
-	}
-	
-	/**
-	 * 로컬 DB에 저장.
-	 * @param tableName
-	 * @param dataEntity
-	 * @return
-	 */
-	public int inertLocalData(String tableName, DataEntity dataEntity){
-		int result = 0;
-		Trx trx = Trx.getInstance();
-		Connection conn;
-		try {
-			conn = trx.getLocalConn();
-			result = inertData(conn, tableName, dataEntity);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (trx != null)
-					trx.close();
-			} catch (SQLException e) {
-					e.printStackTrace();
-			}
-		}
-		return result;
-	}
-	
-	/**
 	 * DB에 저장.
 	 * JmProperty 를 입력받아 컨넥션을 생성
 	 * @param property
@@ -476,7 +250,7 @@ public class Dao {
 	 */
 	public int inertData(JmProperties property, String tableName, DataEntity dataEntity){
 		int result = 0;
-		Trx trx = Trx.getInstance();
+		Trx trx = new Trx();
 		Connection conn;
 		try {
 			conn = trx.getConn(property);
@@ -566,63 +340,6 @@ public class Dao {
 		return result;
 	}
 	
-	
-	/**
-	 * 원격 DB 업데이트.
-	 * @param tableName
-	 * @param dataEntity
-	 * @return
-	 */
-	public int updateRemoteData(String tableName, DataEntity dataEntity, DataEntity whereEntity){
-		int result = 0;
-		Trx trx = Trx.getInstance();
-		Connection conn;
-		try {
-			conn = trx.getRemoteConn();
-			result = updateData(conn, tableName, dataEntity, whereEntity);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (trx != null)
-					trx.close();
-			} catch (SQLException e) {
-					e.printStackTrace();
-			}
-		}
-		return result;
-	}
-	
-	/**
-	 * 로컬 DB 업데이트.
-	 * @param tableName
-	 * @param dataEntity
-	 * @return
-	 */
-	public int updateLocalData(String tableName, DataEntity dataEntity, DataEntity whereEntity){
-		int result = 0;
-		Trx trx = Trx.getInstance();
-		Connection conn;
-		try {
-			conn = trx.getLocalConn();
-			result = updateData(conn, tableName, dataEntity, whereEntity);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (trx != null)
-					trx.close();
-			} catch (SQLException e) {
-					e.printStackTrace();
-			}
-		}
-		return result;
-	}
-	
 	/**
 	 * DB 업데이트.
 	 * JmProperty 를 입력받아 컨넥션을 생성
@@ -634,7 +351,7 @@ public class Dao {
 	 */
 	public int updateData(JmProperties property, String tableName, DataEntity dataEntity, DataEntity whereEntity){
 		int result = 0;
-		Trx trx = Trx.getInstance();
+		Trx trx = new Trx();
 		Connection conn;
 		try {
 			conn = trx.getConn(property);
@@ -743,7 +460,7 @@ public class Dao {
 	 */
 	public int updateSql(JmProperties property, String sql, String[] params){
 		int result = 0;
-		Trx trx = Trx.getInstance();
+		Trx trx = new Trx();
 		Connection conn;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -782,62 +499,6 @@ public class Dao {
 	}
 	
 	/**
-	 * 원격 DB 삭제.
-	 * @param tableName
-	 * @param dataEntity
-	 * @return
-	 */
-	public int deleteRemoteData(String tableName, DataEntity whereEntity){
-		int result = 0;
-		Trx trx = Trx.getInstance();
-		Connection conn;
-		try {
-			conn = trx.getRemoteConn();
-			result = deleteData(conn, tableName, whereEntity);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (trx != null)
-					trx.close();
-			} catch (SQLException e) {
-					e.printStackTrace();
-			}
-		}
-		return result;
-	}
-	
-	/**
-	 * 로컬 DB 삭제.
-	 * @param tableName
-	 * @param dataEntity
-	 * @return
-	 */
-	public int deleteLocalData(String tableName, DataEntity whereEntity){
-		int result = 0;
-		Trx trx = Trx.getInstance();
-		Connection conn;
-		try {
-			conn = trx.getLocalConn();
-			result = deleteData(conn, tableName, whereEntity);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (trx != null)
-					trx.close();
-			} catch (SQLException e) {
-					e.printStackTrace();
-			}
-		}
-		return result;
-	}
-	
-	/**
 	 * DB 삭제.
 	 * JmProperty 를 입력받아 컨넥션을 생성
 	 * @param property
@@ -847,7 +508,7 @@ public class Dao {
 	 */
 	public int deleteData(JmProperties property, String tableName, DataEntity whereEntity){
 		int result = 0;
-		Trx trx = Trx.getInstance();
+		Trx trx = new Trx();
 		Connection conn;
 		try {
 			conn = trx.getConn(property);

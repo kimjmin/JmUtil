@@ -21,14 +21,14 @@ public class LoginUtil {
 		int resCnt = 0;
 		
 		Dao dao = Dao.getInstance();
-		Trx trx = Trx.getInstance();
+		Trx trx = new Trx();
 		Connection conn = null;
 		StringBuffer sql = new StringBuffer();
 		
 		JmProperties property = new JmProperties();
 		
 		try {
-			conn = trx.getRemoteConn();
+			conn = trx.getConn();
 			
 			sql.append("select count(*) from ");
 			sql.append(property.get("loginTable"));

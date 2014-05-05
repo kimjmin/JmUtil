@@ -7,18 +7,8 @@ import java.sql.SQLException;
 import jm.com.JmProperties;
 
 public class Trx {
-
-	private static Trx instance = null;
+	
 	private Connection conn = null;
-	
-	private Trx(){};
-	
-	public static Trx getInstance() {
-		if(instance == null){
-			instance = new Trx();
-		}
-		return instance;
-	}
 	
 	/**
 	 * 
@@ -46,28 +36,6 @@ public class Trx {
 	}
 	
 	/**
-	 * 로컬 connection
-	 * @return
-	 * @throws SQLException
-	 * @throws ClassNotFoundException
-	 */
-	public Connection getLocalConn() throws SQLException, ClassNotFoundException{
-		JmProperties property = new JmProperties();
-		return this.getConn("127.0.0.1", property.get("dbDb"), property.get("dbUser"), property.get("dbPassswd"));
-	}
-	
-	/**
-	 * 리모트 connection
-	 * @return
-	 * @throws SQLException
-	 * @throws ClassNotFoundException
-	 */
-	public Connection getRemoteConn() throws SQLException, ClassNotFoundException{
-		JmProperties property = new JmProperties();
-		return this.getConn(property.get("dbUrl"), property.get("dbDb"), property.get("dbUser"), property.get("dbPassswd"));
-	}
-	
-	/**
 	 * 컨넥션 가져오는 메서드.
 	 * @param url
 	 * @param db
@@ -90,8 +58,9 @@ public class Trx {
 	 * @throws SQLException
 	 */
 	public void close() throws SQLException{
-		if(this.conn != null)
+		if(this.conn != null){
 			this.conn.close();
+		}
 	}
 	
 }
