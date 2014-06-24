@@ -38,8 +38,8 @@ public class JmUser {
 	}
 	
 	public void setDataEntity(DataEntity dataEntity){
-		this.id = dataEntity.get("id");
-		this.passwd = dataEntity.get("passwd");
-		this.name = dataEntity.get("name");
+		this.id = (String)dataEntity.get("id");
+		this.passwd = (String)dataEntity.get("passwd");
+		this.name = (String)dataEntity.get("name");
 	}
 }

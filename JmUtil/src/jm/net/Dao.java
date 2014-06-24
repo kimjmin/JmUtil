@@ -216,7 +216,7 @@ public class Dao {
 			while (rs.next()) {
 				DataEntity tempDataEntity = new DataEntity();
 				for(int j=1; j <= meta.getColumnCount(); j++){
-					tempDataEntity.put(meta.getColumnName(j), rs.getString(j));
+					tempDataEntity.put(meta.getColumnName(j), rs.getObject(j));
 				}
 				vec.add(tempDataEntity);
 			}
@@ -312,7 +312,7 @@ public class Dao {
 			pstmt = conn.prepareStatement(sql.toString());
 			
 			for(int stm=0; stm < columSize; stm++){
-				pstmt.setString((stm+1), dataEntity.get(colums[stm]));
+				pstmt.setObject((stm+1), dataEntity.get(colums[stm]));
 				
 				//오류 출력을 위한 value 저장
 				values.append(dataEntity.get(colums[stm]));
@@ -415,7 +415,7 @@ public class Dao {
 			
 			int totalSize = 1;
 			for(int stm=0; stm < setColumSize; stm++){
-				pstmt.setString((totalSize), setEntity.get(setColums[stm]));
+				pstmt.setObject((totalSize), setEntity.get(setColums[stm]));
 				//오류 출력을 위한 value 저장
 				values.append(setEntity.get(setColums[stm]));
 				if(stm < setColumSize-1){ values.append(", "); } else { values.append("\n"); }
@@ -423,7 +423,7 @@ public class Dao {
 			}
 			
 			for(int stm=0; stm < whereColumSize; stm++){
-				pstmt.setString((totalSize), whereEntity.get(whereColums[stm]));
+				pstmt.setObject((totalSize), whereEntity.get(whereColums[stm]));
 				//오류 출력을 위한 value 저장
 				values.append(whereEntity.get(whereColums[stm]));
 				if(stm < whereColumSize-1){ values.append(", "); }
@@ -559,7 +559,7 @@ public class Dao {
 			pstmt = conn.prepareStatement(sql.toString());
 			
 			for(int stm=0; stm < whereColumSize; stm++){
-				pstmt.setString((stm+1), whereEntity.get(whereColums[stm]));
+				pstmt.setObject((stm+1), whereEntity.get(whereColums[stm]));
 				//오류 출력을 위한 value 저장
 				values.append(whereEntity.get(whereColums[stm]));
 				if(stm < whereColumSize-1){ values.append(", "); }

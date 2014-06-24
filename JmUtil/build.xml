@@ -34,6 +34,7 @@
 	
 	<target name="dist" depends="mkjar">
 		<copy file="${base.dir}/lib/${jar.file}" tofile="${candi.dir}/WEB-INF/lib/${jar.file}" overwrite="true"/>
+		<copy file="${base.dir}/lib/${jar.file}" tofile="${mypick.dir}/WEB-INF/lib/${jar.file}" overwrite="true"/>
 	</target>
 	
 	<target name="run">
