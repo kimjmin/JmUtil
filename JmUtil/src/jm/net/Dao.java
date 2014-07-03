@@ -586,4 +586,64 @@ public class Dao {
 		return result;
 	}
 	
+	/**
+	 * DB 테이블 전체 데이터 삭제.
+	 * JmProperty 를 입력받아 컨넥션을 생성
+	 * @param property
+	 * @param tableName
+	 * @return
+	 */
+	public int deleteAll(JmProperties property, String tableName){
+		int result = 0;
+		Trx trx = new Trx();
+		Connection conn;
+		try {
+			conn = trx.getConn(property);
+			result = deleteAll(conn, tableName);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (trx != null)
+					trx.close();
+			} catch (SQLException e) {
+					e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * DB 테이블 전체 데이터 삭제.
+	 * @param tableName : 삭제할 테이블 명
+	 * @return
+	 */
+	public int deleteAll(Connection conn, String tableName) {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		StringBuffer sql = new StringBuffer();
+		try {
+			sql.append("DELETE FROM "+ tableName);
+			pstmt = conn.prepareStatement(sql.toString());
+			result = pstmt.executeUpdate();
+		} catch (SQLException sqe) {
+			sqe.printStackTrace();
+			System.out.println("SQL : " + sql.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+			} catch (SQLException se) {
+				se.printStackTrace();
+			}
+		}
+		return result;
+	}
 }
