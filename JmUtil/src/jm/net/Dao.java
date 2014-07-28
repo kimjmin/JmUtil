@@ -469,10 +469,12 @@ public class Dao {
 			conn = trx.getConn(property);
 			pstmt = conn.prepareStatement(sql);
 			int i = 1;
-			for(String param : params){
-				pstmt.setString(i, param);
-				values.append(param+", ");
-				i++;
+			if(params != null){
+				for(String param : params){
+					pstmt.setString(i, param);
+					values.append(param+", ");
+					i++;
+				}
 			}
 			
 			result = pstmt.executeUpdate();
