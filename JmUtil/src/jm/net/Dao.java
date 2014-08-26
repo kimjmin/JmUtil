@@ -11,11 +11,22 @@ import jm.com.JmProperties;
 
 public class Dao {
 	public static Dao instance = null;
+	private static boolean isMaria = false;
 	
 	private Dao(){}
 	
 	public static Dao getInstance(){
 		if(instance == null){
+			instance = new Dao();
+		}
+		return instance;
+	}
+	
+	public static Dao getInstance(String conn){
+		if(instance == null){
+			if("maria".equals(conn.toLowerCase())){
+				isMaria = true;
+			}
 			instance = new Dao();
 		}
 		return instance;
@@ -31,7 +42,12 @@ public class Dao {
 	 */
 	public int getCount(JmProperties property, String sql, String[] params){
 		int result = 0;
-		Trx trx = new Trx();
+		Trx trx = null;
+		if(isMaria){
+			trx = new Trx("maria");
+		} else {
+			trx = new Trx();
+		}
 		Connection conn;
 		try {
 			conn = trx.getConn(property);
@@ -100,7 +116,12 @@ public class Dao {
 	 */
 	public long getLongCount(JmProperties property, String sql, String[] params){
 		long result = 0;
-		Trx trx = new Trx();
+		Trx trx = null;
+		if(isMaria){
+			trx = new Trx("maria");
+		} else {
+			trx = new Trx();
+		}
 		Connection conn;
 		try {
 			conn = trx.getConn(property);
@@ -169,7 +190,12 @@ public class Dao {
 	 */
 	public DataEntity[] getResult(JmProperties property, String sql, String[] params){
 		DataEntity[] result = null;
-		Trx trx = new Trx();
+		Trx trx = null;
+		if(isMaria){
+			trx = new Trx("maria");
+		} else {
+			trx = new Trx();
+		}
 		Connection conn;
 		try {
 			conn = trx.getConn(property);
@@ -250,7 +276,12 @@ public class Dao {
 	 */
 	public int inertData(JmProperties property, String tableName, DataEntity dataEntity){
 		int result = 0;
-		Trx trx = new Trx();
+		Trx trx = null;
+		if(isMaria){
+			trx = new Trx("maria");
+		} else {
+			trx = new Trx();
+		}
 		Connection conn;
 		try {
 			conn = trx.getConn(property);
@@ -351,7 +382,12 @@ public class Dao {
 	 */
 	public int updateData(JmProperties property, String tableName, DataEntity dataEntity, DataEntity whereEntity){
 		int result = 0;
-		Trx trx = new Trx();
+		Trx trx = null;
+		if(isMaria){
+			trx = new Trx("maria");
+		} else {
+			trx = new Trx();
+		}
 		Connection conn;
 		try {
 			conn = trx.getConn(property);
@@ -460,7 +496,12 @@ public class Dao {
 	 */
 	public int updateSql(JmProperties property, String sql, String[] params){
 		int result = 0;
-		Trx trx = new Trx();
+		Trx trx = null;
+		if(isMaria){
+			trx = new Trx("maria");
+		} else {
+			trx = new Trx();
+		}
 		Connection conn;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -510,7 +551,12 @@ public class Dao {
 	 */
 	public int deleteData(JmProperties property, String tableName, DataEntity whereEntity){
 		int result = 0;
-		Trx trx = new Trx();
+		Trx trx = null;
+		if(isMaria){
+			trx = new Trx("maria");
+		} else {
+			trx = new Trx();
+		}
 		Connection conn;
 		try {
 			conn = trx.getConn(property);
@@ -597,7 +643,12 @@ public class Dao {
 	 */
 	public int deleteAll(JmProperties property, String tableName){
 		int result = 0;
-		Trx trx = new Trx();
+		Trx trx = null;
+		if(isMaria){
+			trx = new Trx("maria");
+		} else {
+			trx = new Trx();
+		}
 		Connection conn;
 		try {
 			conn = trx.getConn(property);
