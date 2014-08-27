@@ -52,9 +52,7 @@ public class Dao {
 		try {
 			conn = trx.getConn(property);
 			result = getCount(conn, sql, params);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
@@ -126,9 +124,7 @@ public class Dao {
 		try {
 			conn = trx.getConn(property);
 			result = getLongCount(conn, sql, params);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
@@ -200,9 +196,7 @@ public class Dao {
 		try {
 			conn = trx.getConn(property);
 			result = getResult(conn, sql, params);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
@@ -286,9 +280,7 @@ public class Dao {
 		try {
 			conn = trx.getConn(property);
 			result = inertData(conn, tableName, dataEntity);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
@@ -392,9 +384,7 @@ public class Dao {
 		try {
 			conn = trx.getConn(property);
 			result = updateData(conn, tableName, dataEntity, whereEntity);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
@@ -561,9 +551,7 @@ public class Dao {
 		try {
 			conn = trx.getConn(property);
 			result = deleteData(conn, tableName, whereEntity);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
@@ -653,9 +641,7 @@ public class Dao {
 		try {
 			conn = trx.getConn(property);
 			result = deleteAll(conn, tableName);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {

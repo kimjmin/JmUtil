@@ -1,5 +1,8 @@
 package jm.sec.auth;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -17,7 +20,7 @@ public class LoginUtil {
 		
 	}
 	
-	public boolean checkId(String id, String passwd){
+	public boolean checkId(String id, String passwd) throws UnsupportedEncodingException, FileNotFoundException, IOException{
 		int resCnt = 0;
 		
 		Dao dao = Dao.getInstance();

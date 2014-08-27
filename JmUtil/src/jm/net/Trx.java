@@ -1,5 +1,8 @@
 package jm.net;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -26,8 +29,11 @@ public class Trx {
 	 * @return
 	 * @throws SQLException
 	 * @throws ClassNotFoundException
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
+	 * @throws UnsupportedEncodingException 
 	 */
-	public Connection getConn() throws SQLException, ClassNotFoundException {
+	public Connection getConn() throws SQLException, ClassNotFoundException, UnsupportedEncodingException, FileNotFoundException, IOException {
 		return this.getConn(new JmProperties());
 	}
 	
@@ -38,8 +44,11 @@ public class Trx {
 	 * @return
 	 * @throws SQLException
 	 * @throws ClassNotFoundException
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
+	 * @throws UnsupportedEncodingException 
 	 */
-	public Connection getConn(JmProperties property) throws SQLException, ClassNotFoundException {
+	public Connection getConn(JmProperties property) throws SQLException, ClassNotFoundException, UnsupportedEncodingException, FileNotFoundException, IOException {
 		if(property == null){
 			property = new JmProperties();
 		}

@@ -2,8 +2,10 @@ package jm.log;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -18,7 +20,7 @@ public class Log {
 	
 	public static Log instance = null;
 	private Log(){}
-	public static Log getInstance(String prop){
+	public static Log getInstance(String prop) throws UnsupportedEncodingException, FileNotFoundException, IOException{
 		property = new JmProperties(prop);
 		if(instance == null){
 			instance = new Log();
