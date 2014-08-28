@@ -35,7 +35,6 @@ public class JmProperties {
 			created = false;
 		} catch (IOException e) {
 			created = false;
-			e.printStackTrace();
 		}
 		return created;
 	}
@@ -46,9 +45,8 @@ public class JmProperties {
 		try {
 			this.property.load(inputStream);
 			created = true;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			created = false;
-			e.printStackTrace();
 		}
         return created;
 	}

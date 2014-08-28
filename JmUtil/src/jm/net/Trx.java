@@ -12,17 +12,6 @@ import jm.com.JmProperties;
 public class Trx {
 	
 	private Connection conn = null;
-	private String connStr = "com.mysql.jdbc.Driver";
-	
-	public Trx(){
-		
-	}
-	
-	public Trx(String conn){
-		if("maria".equals(conn.toLowerCase())){
-			connStr = "org.mariadb.jdbc.Driver";
-		}
-	}
 	
 	/**
 	 * 
@@ -52,7 +41,7 @@ public class Trx {
 		if(property == null){
 			property = new JmProperties();
 		}
-		return this.getConn(property.get("dbUrl"), property.get("dbDb"), property.get("dbUser"), property.get("dbPassswd"));
+		return this.getConn(property.get("dbType"), property.get("dbUrl"), property.get("dbDb"), property.get("dbUser"), property.get("dbPassswd"));
 	}
 	
 	/**
@@ -65,9 +54,14 @@ public class Trx {
 	 * @throws SQLException
 	 * @throws ClassNotFoundException
 	 */
-	public Connection getConn(String url, String db, String user, String pw) throws SQLException, ClassNotFoundException {
+	public Connection getConn(String dbType, String url, String db, String user, String pw) throws SQLException, ClassNotFoundException {
 		if(this.conn == null || this.conn.isClosed()){
-			Class.forName(connStr);
+			if("maria".equals(dbType.toLowerCase())){
+				Class.forName("org.mariadb.jdbc.Driver");
+			} else {
+				Class.forName("com.mysql.jdbc.Driver");
+			}
+			
 			this.conn = DriverManager.getConnection("jdbc:mysql://"+url+"/"+db, user, pw);
 		}
 		return this.conn;
