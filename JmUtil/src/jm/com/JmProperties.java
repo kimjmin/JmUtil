@@ -13,7 +13,7 @@ public class JmProperties {
 
 	private Properties property;
 
-	public JmProperties() throws UnsupportedEncodingException, FileNotFoundException, IOException {
+	public JmProperties(){
 		this.property = new Properties();
 	}
 	
@@ -22,15 +22,35 @@ public class JmProperties {
 		this.property.load(new BufferedReader(new InputStreamReader(new FileInputStream(propertyFile), "UTF-8")));
 	}
 	
-	public void setPath(String path) throws UnsupportedEncodingException, FileNotFoundException, IOException {
-		this.property.load(new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8")));
+	public boolean setPath(String path){
+		boolean created = false;
+		try {
+			this.property.load(new BufferedReader(new InputStreamReader(new FileInputStream(path), "UTF-8")));
+			created = true;
+		} catch (UnsupportedEncodingException e) {
+			System.out.println("UTF-8 : 지원하지 않는 형식입니다.");
+			created = false;
+		} catch (FileNotFoundException e) {
+			System.out.println("파일이 존재하지 않습니다 :\n"+path);
+			created = false;
+		} catch (IOException e) {
+			created = false;
+			e.printStackTrace();
+		}
+		return created;
 	}
-	public void setResource(String resource) throws IOException {
+	
+	public boolean setResource(String resource) {
+		boolean created = false;
 		InputStream inputStream = getClass().getClassLoader().getResourceAsStream(resource);
-		this.property.load(inputStream);
-        if (inputStream == null) {
-            throw new FileNotFoundException("property file '" + resource + "' not found in the classpath");
-        }
+		try {
+			this.property.load(inputStream);
+			created = true;
+		} catch (IOException e) {
+			created = false;
+			e.printStackTrace();
+		}
+        return created;
 	}
 	
 	public void set(String key, String value) {
