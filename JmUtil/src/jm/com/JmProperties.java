@@ -59,8 +59,4 @@ public class JmProperties {
 		return this.property.getProperty(key);
 	}
 	
-	public void save(){
-		
-	}
-	
 }
