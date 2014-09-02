@@ -33,6 +33,7 @@ public class DataEntity extends HashMap<String, Object>{
 			} else if(StringUtil.isNumber(keyVal)){
 				str.append("\""+keys[i]+"\":"+keyVal);
 			} else {
+				
 				str.append("\""+keys[i]+"\":\""+keyVal+"\"");
 			}
 			if(i < keys.length-1){ str.append(","); }
@@ -59,6 +60,7 @@ public class DataEntity extends HashMap<String, Object>{
 			} else if(StringUtil.isNumber(keyVal)){
 				str.append("\""+keys[i]+"\":"+keyVal);
 			} else {
+				
 				str.append("\""+keys[i]+"\":\""+keyVal+"\"");
 			}
 			if(i < keys.length-1){ str.append(","); }
@@ -85,6 +87,7 @@ public class DataEntity extends HashMap<String, Object>{
 			} else if(StringUtil.isNumber(keyVal)){
 				str.append("\""+keys[i]+"\":"+keyVal);
 			} else {
+				
 				str.append("\""+keys[i]+"\":\""+keyVal+"\"");
 			}
 			if(i < keys.length-1){ str.append(","); }
@@ -110,6 +113,7 @@ public class DataEntity extends HashMap<String, Object>{
 			} else if(StringUtil.isNumber(keyVal)){
 				str.append("\""+keys[i]+"\":"+keyVal);
 			} else {
+				
 				str.append("\""+keys[i]+"\":\""+keyVal+"\"");
 			}
 			if(i < keys.length-1){ str.append(","); }
@@ -138,6 +142,7 @@ public class DataEntity extends HashMap<String, Object>{
 				} else if(StringUtil.isNumber(keyVal)){
 					str.append("\""+keys[i]+"\":"+keyVal);
 				} else {
+					
 					str.append("\""+keys[i]+"\":\""+keyVal+"\"");
 				}
 				if(i < keys.length-1){ str.append(","); }
