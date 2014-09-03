@@ -242,13 +242,13 @@ public class Dao {
 	 * @param dataEntity
 	 * @return
 	 */
-	public int inertData(JmProperties property, String tableName, DataEntity dataEntity){
+	public int insertData(JmProperties property, String tableName, DataEntity dataEntity){
 		int result = 0;
 		Trx trx = new Trx();
 		Connection conn;
 		try {
 			conn = trx.getConn(property);
-			result = inertData(conn, tableName, dataEntity);
+			result = insertData(conn, tableName, dataEntity);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -270,7 +270,7 @@ public class Dao {
 	 * @return
 	 * @throws Exception 
 	 */
-	public int inertData(Connection conn, String tableName, DataEntity dataEntity){
+	public int insertData(Connection conn, String tableName, DataEntity dataEntity){
 		int result = 0;
 		
 		PreparedStatement pstmt = null;
@@ -553,8 +553,7 @@ public class Dao {
 				//오류 출력을 위한 value 저장
 				values.append(whereEntity.get(whereColums[stm]));
 				if(stm < whereColumSize-1){ values.append(", "); }
-			}
-			
+			}			
 			result = pstmt.executeUpdate();
 
 		} catch (SQLException sqe) {
