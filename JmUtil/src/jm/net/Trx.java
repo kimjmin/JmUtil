@@ -56,12 +56,15 @@ public class Trx {
 	 */
 	public Connection getConn(String dbType, String url, String db, String user, String pw) throws SQLException, ClassNotFoundException {
 		if(this.conn == null || this.conn.isClosed()){
-			if("maria".equals(dbType.toLowerCase())){
-				Class.forName("org.mariadb.jdbc.Driver");
+			if(dbType != null){
+				if("maria".equals(dbType.toLowerCase())){
+					Class.forName("org.mariadb.jdbc.Driver");
+				} else {
+					Class.forName("com.mysql.jdbc.Driver");
+				}
 			} else {
 				Class.forName("com.mysql.jdbc.Driver");
 			}
-			
 			this.conn = DriverManager.getConnection("jdbc:mysql://"+url+"/"+db, user, pw);
 		}
 		return this.conn;
